@@ -1,19 +1,406 @@
-html {
-    font-size: 22px;
+@import url('https://fonts.googleapis.com/css2?family=Fugaz+One&family=Nunito&display=swap');
+
+/* || RESET */
+
+*, 
+*::after,
+*::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* The box-sizing property allows us to include the padding and border in an element's total width and height. */
+} 
+
+img{
+    display: block;
+    /* gets rid of the minimal little space beneath images, which were originally designed to be inline */
+    max-width: 100%;
+    /* if the content's width is  greater than the maximum specified width, it will automatically change the height of the content */
+    height: auto;
+
 }
 
-body {
+input, button, textarea{
+    /* these form elements dont inherit the font  property from the root, therefore, we will have to manually do it. */
+    font: inherit;
+}
+
+/* || VARIABLES */
+/* the variable  declaration is always done in the root selector */
+:root{
+    /* FONTS */
+    --FF:"Nunito", "sans-serif";
+    /* we have used the nunito font with a fallback of sans-serif */
+    --FF-HEADINGS: "Fugaz One", "cursive";
+    --FS: clamp(1rem, 2.2vh, 1.5rem);
+    /* clamp function clamps a middle value within a range of values between a defined minimmum  and maximum bound.it prevents us from adding mini-media queries */
+    /* The first value inside clamp is the minimum size of the text, the middle value is the thing which when altered, changes the text size, i.e. varies with viewport height */
+
+    /* COLORS */
+    --BGCOLOR: orange;
+    --BGCOLOR-FADE:rgb(252, 220, 160);
+    --BGIMAGE: linear-gradient(to bottom, var(--BGCOLOR), var(--BGCOLOR-FADE));
+    /* we did this to create a gradient as a background image as a graddient, fading toward the bottomm */
+    --BODY-BGCOLOR: #FFF;
+    --FONT-COLOR: #000;
+    --BORDER-COLOR: #333;
+    /* flatter black than 000 */
+    --HIGHLIGHT-COLOR: rgb(51, 178, 51);
+    --LINK-COLOR:#000;
+    --LINK-HOVER: hsla(0, 0%, 0%, 0.6);
+    /* use hsla if you want to set the transparency too, here transparency is 40% */
+    --LINK-ACTIVE: orange;
+    --HEADER-BGCOLOR: #000;
+    --HEADER-COLOR: #FFF;
+    --NAV-BGCOLOR: #FFF;
+    --HERO-BGCOLOR:rgba(51, 178, 51, 0.75);
+    --HERO-COLOR: #FFF;
+    --BUTTON-COLOR: white;
+
+    /* BORDERS */
+    --BORDERS: 1px solid var(--BORDER-COLOR);
+    --BORDER-RADIUS: 15px;
+
+    /* STANDARD PADDING */
+    --PADDING-TB: 0.25em;
+    /* padding top bottom */
+    --PADDING-SIDE: 2.5%;
+
+    /* STANDARD MARGIN */
+    --MARGIN: clamp(1em, 2.5vh, 1.5em);
+
+}
+
+@media (prefers-color-scheme : dark)
+{
+    :root{
+        --BGCOLOR: #000;
+        --BGCOLOR-FADE: gray;
+        --HEADER-COLOR: whitesmoke;
+        --NAV-BGCOLOR: rgb(20, 20, 20);
+        --HERO-COLOR: #333;
+        --BODY-BGCOLOR: #333;
+        --FONT-COLOR: whitesmoke;
+        --HIGHLIGHT-COLOR: papayawhip;
+        --BORDER-COLOR: whitesmoke;
+        --LINK-COLOR:whitesmoke;
+        --LINK-HOVER: orange;
+        --LINK-ACTIVE: rgb(252, 200, 103);
+        --BUTTON-COLOR: black;
+
+    }
+}
+
+/* || UTILITY CLASSES */
+.offscreen{
+    /* used to  keep the element offscreen but  keep the element inside the html */
+    position: absolute;
+    left: -10000px;
+}
+
+.nowrap{
+    /* ensuring that text doesnt wraps in an area that is awkward */
+    white-space: nowrap;
+}
+
+.center{
+    /* making sure to center text in a paragraph or a heading */
+    text-align: center;
+}
+
+/* || GENERAL STYLES */
+
+html{
+    scroll-behavior: smooth;
+    /* allows smooth transition when we link to other parts of the same page */
+    font-size: var(--FS);
+    font-family: var(--FF);
+    background-color: var(--BGCOLOR);
+    background-image: var(--BGIMAGE);
+}
+
+body{
+    background-color: var(--BODY-BGCOLOR);
+    color: var(--FONT-COLOR);
     min-height: 100vh;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
-    border-left: 1px solid #333;
-    border-right: 1px solid #333;
+    /* min-height prevents the height property of an element from becoming smaller than the value specified in min-height */
+    max-width:800px;
+    /* limits the maximum width of the content to 800px, and when the content's width is less that 800px, it starts wrapping the content. */
+    margin:0 auto;
+    /* 0 on top and bottom and auto on left and right will center this. */
+    border-left: var(--BORDERS);
+    border-right: var(--BORDERS);
+    box-shadow: 0 0 10px var(--BORDER-COLOR);
 }
 
-th, td, caption {
-    border: 1px solid #333;
-    font-family: 'Courier New', Courier, monospace;
-    border-collapse: separate;
-    padding: 0.5rem;
+h1,h2,h3{
+    font-family: var(--FF-HEADINGS);
+    letter-spacing: 0.1em;
 }
+
+h2, h3{
+    margin-bottom: 1em;
+    color: var(--HIGHLIGHT-COLOR);
+}
+
+p{
+    line-height: 1.5;
+}
+
+a:any-link{
+    /* sets the properties for unvisited links and  visited links*/
+    color:var(--LINK-COLOR) ;
+}
+
+a:hover, a:focus-visible{
+    /* the focus-visible is little bit different from focus */
+    color: var(--LINK-HOVER);
+}
+
+a:active{
+    color: var(--LINK-ACTIVE);
+}
+
+/* ||HEADER */
+
+.header{
+    position: sticky;
+    /* A sticky element toggles between relative and fixed , depending on the scroll position. */
+    top: 0;
+    /* so, header is at very top */
+    z-index: 1;
+    /* the element with a z-index of 1 will be infront of the  elements with a z-index of 0 */
+}
+
+.header__h1{
+    text-align:center;
+    background-color: var(--HEADER-BGCOLOR);
+    color: var(--HEADER-COLOR);
+    padding: var(--PADDING-TB) var(--PADDING-SIDE);
+}
+
+.header__nav{
+    background-color: var(--NAV-BGCOLOR);
+    border-bottom: var(--BORDERS);
+    font-weight: bold;
+    box-shadow: 0 6px 5px -5px var(--BORDER-COLOR);
+}
+
+.header__ul{
+    padding: var(--PADDING-TB) var(--PADDING-SIDE);
+    list-style-type: none;
+    display: flex;
+    /* by setting deisplay to flex, the ul will take the default flex direction which is the row. */
+    justify-content: space-evenly;
+    /* space evenly spaces out the flex items */
+    gap: 1rem;
+    /* setting the gap even if  the screen got smaller */
+}
+
+/* ||HERO */
+
+.hero{
+    position: relative;
+    /* we have set the position of the hero section as relative cuz we are going to put somenthing absolute inside it */
+}
+    .hero__h2{
+        background-color:var(--HERO-BGCOLOR) ;
+        color: var(--HERO-COLOR);
+        padding: 0.25em 0.5em;
+        text-shadow: 2px 2px 5px var(--BORDER-COLOR);
+        position: absolute;
+        /* since, its positioned absolute, it wont have 100% width despite being a block element */
+        top: -100px;
+        left: 20px;
+        /* we have made  the  h2 disappear since we want to animate it coming down */
+        animation:showWelcome 0.5s ease-in-out 1s forwards ;
+        /* forwards keeps away the animation element from vanishing */
+    }
+
+    /* || ANIMATING H2 */
+
+    @keyframes showWelcome{
+        /* THE BEGINNING */
+        0%{
+            top: -20px;
+            transform: skew(0deg, -5deg) scaleY(0);
+            /* skew will  make the h2 lean a little bit */
+            /* scaleY resizes the element vertically */
+        }
+        /* AT 80% */
+        80%{
+            top: 30px;
+            transform: skew(10deg, -5deg) scaleY(1.2);
+        }
+        /* AT COMPLETION OF ANIMATION */
+        100%{
+            top: 20px;
+            transform: skew(-10deg, -5deg) scaleY(1);
+        }
+    }
+
+    /* ||FOOTER */
+    .footer{
+        position: sticky;
+        /* after declaring position sticky, we have to define a position where it sticks to */
+        bottom: 0;
+        background-color: var(--HEADER-BGCOLOR);
+        color: var(--HEADER-COLOR);
+        padding: var(--PADDING-TB) var(--PADDING-SIDE);
+        text-align: center;
+    }
+
+    /* ||MAIN */
+    .main{
+        padding: var(--PADDING-TB) var(--PADDING-SIDE);
+    }
+
+    .main__article{
+        scroll-margin-top: 6.5rem;
+        /* this will prevent the menu from scrolling underneath the header */
+        margin: var(--MARGIN);
+    }
+
+    .main__article:first-child{
+        margin-top: 1em;
+    }
+
+    .main__article:last-child{
+        min-height: calc(100vh - 20em);
+        /* we did this to make  extra scrolling room */
+    }
+
+    /* ||ABOUT */
+
+    .about__trivia{
+        margin: var(--MARGIN);
+    }
+
+    .about__trivia-answer{
+        margin-top: 1em;
+    }
+
+    /* ||CONTACCT */
+
+    .contact__h2{
+        margin: 0;
+    }
+
+    .contact__fieldset{
+        border: none;
+    } 
+
+    .contact__p{
+        margin: 1em 0;
+    }
+
+    .contact__label{
+        display: block;
+        font-weight: bold;
+    }
+
+    .contact__input, .contact__textarea{
+        padding: 0.5rem;
+        border-radius: var(--BORDER-RADIUS);
+        border-width: 2px;
+        width: 100%;
+    }
+
+    .contact__button{
+        padding: 0.5rem;
+        border-radius: var(--BORDER-RADIUS);
+        background-color: var(--HIGHLIGHT-COLOR);
+        color: var(--BUTTON-COLOR);
+        font-weight: bold;
+    }
+    /* while applying grids to our tables, we need to make sure that we dont use divs instead of th td etc. It destroys the semantic meaning of a table. setting deisplay to content,causes an element to be ignored, causing them to be the chilldren of parent of the element instead of element itself. the grid ignores the elements which are set to display content*/
+
+    /* ||MENU */
+    thead, tbody, tfoot, tr {
+        display: contents;
+    }
+
+    .menu__container{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* we want 3 cols each with 1 fraction of available width */
+        grid-template-areas: "hd1 hd2 hd3 "
+        "cr cr1 cr1p"
+        /* hd is for header and cr is for crunchy cr1p is crunchy 1 price */
+        "cr cr2 cr2p"
+        "cr cr3 cr3p"
+        "sf sf1 sf1p"
+        "sf sf2 sf2p"
+        "sf sf3 sf3p"
+        "cs cs cs" ;
+        /* we did this cos of rowspan of 3 */
+        /* now, we have mapped down the grid areas */
+        gap: 0.1em;
+        margin-bottom: 1em;
+    }
+
+    .menu__cr{
+        grid-area: cr;
+    }
+    .menu__sf{
+        grid-area: sf;
+    }
+    .menu__cs{
+        grid-area: cs;
+        
+    }
+
+    .menu__cr, .menu__sf, .menu__cs, .menu__header{
+        color: var(--HIGHLIGHT-COLOR);
+        font-weight: bold;
+        height: 100%;
+        display: grid;
+        place-content: center;
+    }
+
+    
+    .menu__header, .menu__item{
+        width: 100%;
+        padding: 1em;
+        border: medium ridge var(--BORDER-COLOR);
+    }
+
+   .menu__item{
+    display: grid;
+    place-content: center;
+   }
+ /* for the tacos section */
+   thead th:first-child{
+    border-top-left-radius: var(--BORDER-RADIUS);
+   
+   }
+   /* for price section */
+   thead th:last-child{
+    border-top-right-radius: var(--BORDER-RADIUS);
+   
+   }
+   tfoot td{
+    border-bottom-left-radius: var(--BORDER-RADIUS);
+   }
+   tfoot td{
+    border-bottom-right-radius: var(--BORDER-RADIUS);
+   }
+
+   @media screen and (min-width: 576px){
+    .header__h1::before{
+        content: '🌮 ';
+    }
+    .header__h1::after{
+        content: ' 🌮';
+    }
+
+    .menu__header, .menu__cr, .menu__sf, .menu__cs{
+        font-size: 125%;
+    }
+   }
+
+
+
+
+
+
