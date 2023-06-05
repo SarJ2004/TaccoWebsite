@@ -1,2 +1,2 @@
 # TaccoWebsite
-This is mini HTML project that I made by learning HTML from Dave Gray at freecodecamp.org
+This is an HTML-CSS Miniproject, that I made while learning these same from Dave Gray(freecodecamp.org)
